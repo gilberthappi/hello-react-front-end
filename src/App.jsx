@@ -1,29 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Store from './store';
+import Layout from './components/layout';
+import Greeting from './components/greeting';
 
-function App() {
-  const [greetings, setGreetings] = useState([]);
-
-  useEffect(() => {
-    fetch('/api/v1/greetings')
-      .then(response => response.json())
-      .then(data => {
-        console.log('Data from API:', data); // Log the data
-        setGreetings(data);
-      })
-      .catch(error => console.error('Error fetching greetings:', error));
-  }, []);
-
-  return (
-    <div>
-      <h1>Greetings App</h1>
-      <ul>
-        {greetings.map(greeting => (
-          <li key={greeting.id}>{greeting.greeting}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+const App = () => (
+  <Provider store={Store}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Greeting />} />
+          <Route path="*" element={<h1>404 Not Found</h1>} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  </Provider>
+);
 
 export default App;
